@@ -123,56 +123,58 @@ let galleryTop = new Swiper('.gallery-top', {
 
 // Masonry - Gallery of best images
 
-function updateMasonry() {
-    let grid = document.querySelector('.masonry-block');
+window.onload = () => {
+    function updateMasonry() {
+        let grid = document.querySelector('.masonry-block');
 
-    let msnry = new Masonry(grid, {
-        itemSelector: '.grid-item',
-        gutter: 20,
-        columnWidth: 370,
-        percentPosition: true
+        let msnry = new Masonry(grid, {
+            itemSelector: '.grid-item',
+            gutter: 20,
+            columnWidth: 370,
+            percentPosition: true
+        });
+    }
+
+    function galleryImagesHide(grid) {
+        let galleryImages = grid.querySelectorAll('.grid-item:not(.hidden)');
+
+        galleryImages.forEach((el, i) => {
+            if (i >= 8) {
+                el.classList.add('hidden');
+            }
+        });
+    }
+
+    let grids = document.querySelectorAll('.masonry-container');
+
+    grids.forEach((grid) => {
+
+        galleryImagesHide(grid);
+
+        updateMasonry(grid);
+
+        let button = grid.querySelector('.load-more-btn');
+
+        button.addEventListener('click', () => {
+            let contentToShow = grid.querySelectorAll('.grid-item');
+
+            // Loader
+
+            let loader = grid.querySelector('.loader');
+            loader.classList.remove('hidden');
+            button.classList.add('hidden');
+
+            setTimeout(() => {
+                loader.classList.add('hidden');
+
+                contentToShow.forEach((el) => {
+                    el.classList.remove('hidden');
+                });
+
+                updateMasonry(grid);
+            }, 2000);
+
+        });
+
     });
 }
-
-function galleryImagesHide(grid) {
-    let galleryImages = grid.querySelectorAll('.grid-item:not(.hidden)');
-
-    galleryImages.forEach((el, i) => {
-        if (i >= 8) {
-            el.classList.add('hidden');
-        }
-    });
-}
-
-let grids = document.querySelectorAll('.masonry-container');
-
-grids.forEach((grid) => {
-
-    galleryImagesHide(grid);
-
-    updateMasonry(grid);
-
-    let button = grid.querySelector('.load-more-btn');
-
-    button.addEventListener('click', () => {
-        let contentToShow = grid.querySelectorAll('.grid-item');
-
-        // Loader
-
-        let loader = grid.querySelector('.loader');
-        loader.classList.remove('hidden');
-        button.classList.add('hidden');
-
-        setTimeout(() => {
-            loader.classList.add('hidden');
-
-            contentToShow.forEach((el) => {
-                el.classList.remove('hidden');
-            });
-
-            updateMasonry(grid);
-        }, 2000);
-
-    });
-
-});
